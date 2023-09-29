@@ -1,0 +1,177 @@
+              2 
+
+4) create proj greatkart
+   create views.py in greatkart proj
+
+   import views in urls py
+   path for /home
+
+5)   template
+
+ create  template folder , the html files
+ make changes in setting,
+ 'DIRS': ['templates'],  => added
+
+from django.shortcuts import render
+
+
+6)
+           static setting
+
+    create static folder,add all css js img
+
+    add
+
+    STATIC_URL = 'static/'
+STATIC_ROOT=BASE_DIR /'static'
+STATICFILES_DIRS=[
+    'greatkarrt/static',
+]
+
+
+thenn  
+
+python manage.py collectstatic
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                         3rd folder
+
+i created category appp,  write categoty class,
+blank =True =>  field is optional
+upload_to  => image uploadto given directoy
+
+to use Imagefield,  we need to install Pillow,    pip install pillow
+
+register model in admin py,
+
+
+from .models import Category
+admin.site.register(Category)
+
+
+then makemigartions,  migrates
+
+
+to change model name in admin panel
+class Meta:
+        verbose_name='category'
+        verbose_name_plural='categories'
+
+
+
+
+3)
+
+                to create custom user model
+
+just copy paste this
+
+
+create new app => accounts
+
+
+in model.py
+
+
+from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+
+class MyAccountManager(BaseUserManager):
+    def create_user(self, first_name, last_name, username, email, password=None):
+        if not email:
+            raise ValueError("User must have an email address")
+        
+        if not username:
+            raise ValueError("User must have a username")
+        
+        user = self.model(
+            email=self.normalize_email(email),
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+        )
+        
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+    
+    def create_superuser(self, first_name, last_name, username, email, password=None):
+        user = self.create_user(
+            email=self.normalize_email(email),
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+            password=password
+        )
+    
+        user.is_admin = True
+        user.is_staff = True
+        user.is_active = True
+        user.is_superuser = True
+    
+        user.save(using=self._db)
+        return user
+
+class Account(AbstractBaseUser):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    username = models.CharField(max_length=50, unique=True)
+    email = models.EmailField(max_length=50, unique=True)
+    phone_number = models.CharField(max_length=50)
+    
+    # required fields
+    date_joined = models.DateTimeField(auto_now_add=True)
+    last_login = models.DateTimeField(auto_now=True)
+    is_admin = models.BooleanField(default=False)  
+    is_staff = models.BooleanField(default=False) 
+    is_active = models.BooleanField(default=False) 
+    is_superuser = models.BooleanField(default=False)
+    
+    USERNAME_FIELD = 'email'                                                    => to make login using email
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+
+    objects = MyAccountManager()
+    
+    def __str__(self):
+        return self.email
+    
+    def has_perm(self, perm, obj=None):
+        return self.is_admin
+    
+    def has_module_perms(self, app_label):
+        return True
+
+
+
+       in setting.py
+AUTH_USER_MODEL='accounts.Account'
+
+if not works ,add this
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+
+
+
+then  makegrations, migrate,
+
+
+
