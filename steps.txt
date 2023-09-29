@@ -16,17 +16,27 @@ from django.shortcuts import render
 
 
 6)
-           static setting
+         										   static setting
 
     create static folder,add all css js img
 
     add
 
-    STATIC_URL = 'static/'
-STATIC_ROOT=BASE_DIR /'static'
-STATICFILES_DIRS=[
-    'greatkarrt/static',
-]
+ STATIC_URL = '/static/'
+import os
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'app/static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
+
+
+in setting
+
+
+from django.conf.urls.static import static
+from django.conf import settings
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 thenn  
@@ -37,6 +47,8 @@ python manage.py collectstatic
 
 
 
+
+  
 
 
 
@@ -79,7 +91,7 @@ class Meta:
 
 3)
 
-                to create custom user model
+                                                      to create custom user model
 
 just copy paste this
 
@@ -172,6 +184,67 @@ AUTHENTICATION_BACKENDS = [
 
 
 then  makegrations, migrate,
+
+
+delete sqlite.db
+
+
+
+then run server, this create new db
+
+
+
+4) video
+
+
+   									to make changes in display of user
+
+
+in admin.py
+
+
+from django.contrib import admin
+
+# Register your models here.
+from django.contrib.auth.admin import UserAdmin
+from .models import Account
+
+
+
+class AccountAdmin(UserAdmin):
+    list_display = ('email', 'first_name', 'last_name','last_login','date_joined','is_active')  #   tshse list showed in admin
+    # list_display_links = ('email', 'first_name', 'last_name')
+    readonly_fields=('last_login','date_joined')                                                   =>  not editable
+
+
+    filter_horizontal=()             => these r simply required to make changes
+    list_filter=()
+    fieldsets=()
+    
+admin.site.register(Account,AccountAdmin)               =>  here accountAdmin is passed additionaly
+
+
+
+
+
+
+									change	categorty display in admin
+
+
+in admin
+
+
+from django.contrib import admin
+from .models import Category
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('category_name', 'slug', 'discription', 'cat_image')                      => display these things
+    prepopulated_fields = {'slug': ('category_name',)}                                        => slug field automatically filled with category foeld
+
+# Register the Category model with the CategoryAdmin class
+admin.site.register(Category, CategoryAdmin)
+
+
 
 
 
