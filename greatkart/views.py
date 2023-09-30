@@ -1,5 +1,12 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+
+from store.models import Product
+
 def home(request):
     # return HttpResponse("hiii")
-    return render(request,'home.html')
+    products=Product.objects.filter(is_available=True)
+    context={
+        'products':products,
+    }
+    return render(request,'home.html',context)

@@ -248,3 +248,52 @@ admin.site.register(Category, CategoryAdmin)
 
 
 
+
+
+                             4.1)                 created store app
+
+from django.db import models
+
+# Create your models here.
+
+from category.models import Category
+class Product(models.Model):
+    product_name=models.CharField(max_length=200,unique=True)
+    slug        =models.SlugField(max_length=300,unique=True)
+    description =models.TextField(max_length=500,blank=True)
+    price       =models.IntegerField()
+    image       =models.ImageField(upload_to='photos/products')
+    stock       =models.IntegerField()
+    is_available=models.BooleanField(default=True)
+    category    =models.ForeignKey(Category,on_delete=models.CASCADE)
+    created_data=models.DateTimeField(auto_now_add=True)
+    modified    =models.DateTimeField(auto_now=True)
+    
+    
+    def __str__(self):
+        return self.product_name
+
+
+
+
+in admin.py
+
+
+from django.contrib import admin
+
+# Register your models here.
+
+
+from .models import Product
+class ProductAdmin(admin.ModelAdmin):
+# class ProductAdmin(models.ModelAdmin):
+    list_display=('product_name','price','category','stock','is_available')
+    prepopulated_fields={'slug':('product_name',)}
+    
+
+
+admin.site.register(Product,ProductAdmin)
+
+
+
+
