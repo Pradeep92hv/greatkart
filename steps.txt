@@ -297,3 +297,94 @@ admin.site.register(Product,ProductAdmin)
 
 
 
+
+           4.6)
+                               display the product in 2 ways
+
+
+
+
+from django.contrib import admin
+from django.urls import path,include
+
+from . import views
+urlpatterns = [
+  
+    path("",views.store,name="store"),
+    path("<slug:category_slug>/",views.store,name="product_by_category"),
+  
+]
+
+
+
+
+
+from django.shortcuts import render,get_object_or_404
+
+# Create your views here.
+
+from .models import Product
+from category.models import Category
+
+def store(request,category_slug=None):                                                              => default arg,methode overload
+    categories=None
+    products=None
+    
+    if category_slug!=None:
+       print(category_slug)
+       categories= get_object_or_404(Category, slug=category_slug)
+       products=Product.objects.filter(category=categories,is_available=True)
+       products_count=products.count()
+    else:
+        products=Product.objects.filter(is_available=True)
+        products_count=products.count()
+        
+    context={
+        'products':products,
+        'products_count':products_count,
+    }
+    return render(request,'store/store.html',context)
+
+
+
+
+
+
+
+
+                 					5.1)   context_processors.py
+
+it recieve req as arg and return data as dic 
+
+
+context_processors.py
+
+from .models import Category
+
+def menu_links(request):
+    all_links=Category.objects.all()
+    return dict(links=all_links)
+
+
+
+
+then we hv to tell setting.py that we r using context_processors.py
+
+
+in template  => add   'category.context_processors.menu_links',
+			     'appname.file_name.function_name'
+
+
+data return by menu_links is visible to all templates files
+we can use this in normal process also, in views methods send model as context, thats it
+
+
+
+								get_object_or_404
+``								---------------
+
+
+
+          selected_category = get_object_or_404(Category, slug=category_slug)
+        single_product = get_object_or_404(Product, category=selected_category, slug=product_slug)
+      
