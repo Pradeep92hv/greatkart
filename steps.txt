@@ -408,4 +408,146 @@ we can use this in normal process also, in views methods send model as context, 
 
 created app called cart
 2 models   cart and cartItem and register in admin.py
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                           9)  paginator
+
+from django.core.paginator import EmptyPage,PageNotAnInteger,Paginator
+
+
+def store(request,category_slug=None):
+    categories=None
+    products=None
+    
+    if category_slug!=None:
+       print(category_slug)
+       categories= get_object_or_404(Category, slug=category_slug)
+       products=Product.objects.filter(category=categories,is_available=True)
+       products_count=products.count()
+       paginator=Paginator(products,4)
+       page=request.GET.get('page')
+       paged_products=paginator.get_page(page)
+       
+    else:
+        products=Product.objects.filter(is_available=True)
+        paginator=Paginator(products,3)
+        page=request.GET.get('page')
+        paged_products=paginator.get_page(page)
+        products_count=products.count()
+        
+    context={
+        'products':paged_products,
+        'products_count':products_count,
+    }
+    return render(request,'store/store.html',context)
+
+
+
+
+
+<nav class="mt-4" aria-label="Page navigation sample">
+ {% if products.has_other_pages %}
+        <ul class="pagination">
+           {% if products.has_previous %}
+          <li class="page-item "><a class="page-link" href="?page={{products.previous_page_number}}">Previous</a></li>
+           {% else %}
+         <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li> 
+           {% endif %}
+        
+        {% for i in products.paginator.page_range %}
+          {% if products.number == i %}
+        <li class="page-item active"><a class="page-link" href="#">{{i}}</a></li>
+          {% else %}
+        <li class="page-item "><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+          {% endif %}
+        {% endfor %}
+
+        {% if products.has_next %}
+
+        <li class="page-item"> <a class="page-link" href="?page={{products.next_page_number}} "> Next</a> </li>
+        {% else %}  
+        <li class="page-item disabled"> <a class="page-link" href="# "> Next</a> </li>
+        {% endif %} 
+
+
+    </ul>
+ {% endif %}
+    </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+										search function
+
+
+from django.db.models import Q
+
+def search(request):
+    if 'keyword' in request.GET:
+        keyword = request.GET.get('keyword')
+
+        if keyword:
+            products = Product.objects.filter(Q(description__icontains=keyword) | Q(product_name__icontains=keyword))
+        
+    context = {
+        'products': products,
+    }        
+    print(products.count(), "jvhmh")
+    return render(request, 'store/store.html', context)
+
+
+
+
+
+ <form action="{% url "search_product" %}" class="search">
+               
+                    <input type="text" class="form-control" style="width:60%;" placeholder="Search" name="keyword">
+                    
+                    
+                      <button class="btn btn-primary" type="submit">
+                        <i class="fa fa-search"></i>
+                      </button>
+                    
+            </form> <!-- search-wrap .end// -->
+
+
+
+
+{% if 'search' in request.path %}                                 => if path contains search then result store display
+        <h2 class="title-page">Result Store</h2>
+        {% else %}
+        <h2 class="title-page">Our Store</h2>
+        {% endif %}
+
+
       
