@@ -387,4 +387,25 @@ we can use this in normal process also, in views methods send model as context, 
 
           selected_category = get_object_or_404(Category, slug=category_slug)
         single_product = get_object_or_404(Product, category=selected_category, slug=product_slug)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ `						6) folder
+
+created app called cart
+2 models   cart and cartItem and register in admin.py
       
