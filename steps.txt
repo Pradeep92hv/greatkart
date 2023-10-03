@@ -550,4 +550,30 @@ def search(request):
         {% endif %}
 
 
+
+
+
+                                         to make dropdown option in adminpanel    10.1 folder   (filter, display,list)
+
+
+variation_category_choice=(
+       ('color','color'),
+       ('size','size'),
+   ) 
+    
+class variation(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    variation_category = models.CharField(max_length=100,choices=variation_category_choice)  # dropdown for color , size in adminpanel
+    variation_value = models.CharField(max_length=100)
+
+
+
+class variationAdmin(admin.ModelAdmin):
+    list_display=('product','variation_category','variation_value','is_available')
+    list_editable=('is_active',)
+    list_filter=('product','variation_category','variation_value','is_active')
+     
+admin.site.register(variation,variationAdmin)
+
+
       
