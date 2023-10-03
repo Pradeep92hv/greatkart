@@ -48,12 +48,12 @@ def cart(request,total=0,quantity=0,cart_items=None):
 def add_cart(request,product_id):
     
     color = request.GET.get('color')
-    size =request.GET.get('size')
+    # size =request.GET.get('size')
     
-    
-    return HttpResponse(color + ' ' + size)
+    # exit() 
+    return HttpResponse(color)
     product=Product.objects.get(id=product_id)
-    exit() 
+   
     
     try:
         cart=Cart.objects.get(cart_id=_cart_id(request))
