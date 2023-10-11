@@ -41,13 +41,16 @@
                     <a href="{% url 'product_details' item.product.category.slug item.product.slug %}"   class="title text-dark">{{item.product.product_name}}</a>
                     <p class="text-muted small">
                         
-                        {% if cart_items.variation %}
-                            {% for item in cart_items.variation  %}
-                            {{ item.variation_category | capfirst}}::{{ item.variation_value}} <br>
-                            
+                        {% if cart_items.variations.all %}
+                            {% for item in cart_items.variations.all  %}
+                            {{ item.variation_category  }} :: {{ item.variation_value}} <br>
+                              
                             {% endfor %}
                         {% endif %}
-                    </p>
+
+
+                                             
+                    </p> 
                 </figcaption>
             </figure>
         </td>
