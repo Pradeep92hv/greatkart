@@ -15,10 +15,19 @@ class Product(models.Model):
     created_data=models.DateTimeField(auto_now_add=True)
     modified    =models.DateTimeField(auto_now=True)
     
-    
+     
     def __str__(self):
         return self.product_name
    
+   
+   
+class variationManager(models.Manager):
+    def colors(self):
+        return super(variationManager,self).filter(variation_category='color',  is_active=True)
+    def sizes(self):
+        return super(variationManager,self).filter(variation_category='size',  is_active=True)
+    
+    
 variation_category_choice=(
        ('color','color'),
        ('size','size'),

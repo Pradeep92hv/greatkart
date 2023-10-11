@@ -566,6 +566,20 @@ class variation(models.Model):
     variation_category = models.CharField(max_length=100,choices=variation_category_choice)  # dropdown for color , size in adminpanel
     variation_value = models.CharField(max_length=100)
 
+in html file
+
+
+<h6>Choose Color</h6>
+          <option value="color" disabled selected>Choose color</option>
+{% for variation in single_product.variation_set.all %}
+    {% if variation.variation_category == 'color' and variation.is_active %}
+        <option value="{{ variation.variation_value }}">{{ variation.variation_value }}</option>
+    {% endif %}
+{% endfor %}
+
+ </select>
+
+
 
 
 class variationAdmin(admin.ModelAdmin):
