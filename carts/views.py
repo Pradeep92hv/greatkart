@@ -46,7 +46,8 @@ def cart(request,total=0,quantity=0,cart_items=None):
 
 
 def add_cart(request,product_id):
-    
+    product=Product.objects.get(id=product_id)
+    product_variation=[]
     if request.method == "POST":
         for item in request.POST:
             key=item
@@ -54,7 +55,7 @@ def add_cart(request,product_id):
             
             try:
                 variation=Variation.objects.get(variation_category__iexact=key, variation_value__iexact=value)
-                print(variation)
+                product_variation.append(variation)
             except:
                 pass
     
