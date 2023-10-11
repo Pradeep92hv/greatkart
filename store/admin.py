@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 
 
-from .models import Product,variation
+from .models import Product,Variation
 class ProductAdmin(admin.ModelAdmin):
 # class ProductAdmin(models.ModelAdmin):
     list_display=('product_name','price','stock','category','modified','is_available')
@@ -18,4 +18,4 @@ class variationAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Product,ProductAdmin)
-admin.site.register(variation,variationAdmin)
+admin.site.register(Variation,variationAdmin)

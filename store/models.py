@@ -33,7 +33,7 @@ variation_category_choice=(
        ('size','size'),
    ) 
     
-class variation(models.Model):
+class Variation(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE)
     variation_category = models.CharField(max_length=100,choices=variation_category_choice)  # dropdown for color , size in adminpanel
     variation_value = models.CharField(max_length=100)
